@@ -18,8 +18,28 @@
 > For higher robustness in production, add a Stripe webhook endpoint to mark orders paid server-side on `checkout.session.completed`, and validate webhook signatures. For local dev you can use the Stripe CLI to forward events.
 
 ## Setup / Run
-1. Create a Python virtualenv and install requirements:
+1. Database setup:
+   ```bash
+      psql -U postgres
+      CREATE DATABASE stripe_shop_db; 
+
+2. Build Django Project and models:
+   ```bash
+      django-admin startproject stripe_shop .
+      python manage.py startapp store 
+
+3. Create a Python virtualenv and install requirements:
    ```bash
    python -m venv venv
    venv/Scripts/activate
    pip install -r requirements.txt
+ 
+4. Migrate database:
+   ```bash
+      python manage.py makemigrations
+      python manage.py migrate
+
+5. Run Server:
+   ```bash
+      python manage.py runserver
+
