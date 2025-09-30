@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Simple Store</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; }
+    .product { border: 1px solid #ddd; padding: 12px; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center;}
+    .orders { margin-top: 30px; border-top: 1px solid #ccc; padding-top: 12px; }
+    button:disabled { opacity: 0.6; }
+  </style>
+</head>
+<body>
+  <h1>Store — 3 Products</h1>
+  <form id="buy-form">
+    {% csrf_token %}
+    {% for p in products %}
+      <div class="product">
+        <div>
+          <strong>{{ p.name }}</strong><br>
+          Price: ${{ p.price_dollars}}
+        </div>
+        <div>
+          <label>Qty:
+            <input name="quantity_{{ p.id }}" type="number" min="0" value="0" style="width:60px">
+          </label>
+        </div>
+      </div>
+    {% endfor %}
+    <button id="buy-btn" type="submit">Buy (Stripe Checkout)</button>
+  </form>
+
+  <div class="orders">
+    <h2>My Orders (Paid)</h2>
+    {% if orders %}
+      <ul>
+      {% for o in orders %}
+        <li>Order {{ o.id }} — Paid — {{ o.created_at }} — Total: ${{ o.total_dollars }}
+          <ul>
+            {% for it in o.items.all %}
+              <li>{{ it.product.name }} × {{ it.quantity }} @ ${{ it.total_price_dollars }}</li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>No paid orders yet.</p>
+    {% endif %}
+  </div>
+
+<script>
+document.getElementById('buy-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const buyBtn = document.getElementById('buy-btn');
+  buyBtn.disabled = true;
+  const formData = new FormData(e.target);
+
+  // post to server to create a checkout session
+  const res = await fetch("{% url 'store:create_checkout_session' %}", {
+    method: "POST",
+    headers: {"X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value},
+    body: formData
+  });
+
+  if (!res.ok) {
+    const txt = await res.text();
+    alert("Error: " + txt);
+    buyBtn.disabled = false;
+    return;
+  }
+  const data = await res.json();
+  // redirect the browser to Stripe Checkout
+  window.location = data.url;
+});
+</script>
+</body>
+</html>

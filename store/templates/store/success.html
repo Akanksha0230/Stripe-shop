@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Payment result</title></head>
+<body>
+  {% if paid %}
+    <h1>Payment successful!</h1>
+    <p>Your order was paid. <a href="{% url 'store:index' %}">Return to store</a> to view "My Orders".</p>
+  {% else %}
+    <h1>Payment not completed</h1>
+    <p>We could not verify payment. <a href="{% url 'store:index' %}">Return to store</a>.</p>
+  {% endif %}
+</body>
+</html>
