@@ -7,7 +7,6 @@
 - Database used: PostgreSQL.
 - Orders + items stored server-side to avoid losing state if client refreshes.
 
-
 ## Flow Chosen
 - **Stripe Checkout Session** instead of Payment Intents.
   - Easier integration for test project.
