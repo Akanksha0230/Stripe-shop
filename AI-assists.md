@@ -7,3 +7,4 @@ During development, AI-based coding assistance tools were used selectively for:
 
 AI tools were **not used to auto-generate the entire codebase**.  
 All business logic, design decisions, and final implementations were written and validated by me.  
+
