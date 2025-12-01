@@ -48,4 +48,3 @@
 Finally to test  payment Enter some product quantities → click Buy. Stripe Checkout page opens. Use test card Example: 4242 4242 4242 4242 Fill any future date and cvv any no. 
 After success, you’ll be redirected back to /store/success/.
 Return to main page → see your paid order in “My Orders”.
-
